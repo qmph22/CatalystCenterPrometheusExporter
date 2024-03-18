@@ -1,6 +1,6 @@
 # DNAC Prometheus Exporter
 
-This repository is reference source code for a Prometheus Data Exporter for DNAC. 
+This repository was forked from https://github.com/CiscoDevNet/DNACPrometheusExporter and is reference source code for a Prometheus Data Exporter for DNAC. The purpose of this fork is to be able to separate the functions of the downloaded Docker container (https://github.com/stefanprodan/dockprom) into separate containers and to update the JavaScript files to adopt ES6.
 
 ## Pre-requisites
 1. Node version v8.11.2 or beyond recommended.  (Tested with node v 8.11.2)
