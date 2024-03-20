@@ -7,9 +7,9 @@ npm audit
 cd dockprom
 git clone https://github.com/stefanprodan/dockprom.git .
 mv ./prometheus/prometheus.yml ./prometheus/prometheus.yml.bak
-cp ../config/prometheus.yml ./prometheus/
+cp ../config/prometheus.yml ./prometheus/prometheus.yml
 echo "IP address to bind application to is "$1
-sed -i "s/IP_ADDRESS/$1/g" ../prometheus/prometheus.yml
+sed -i "s/IP_ADDRESS/$1/g" ./prometheus/prometheus.yml
 rm ../DNAC_USER_CONFIG.js
 cp ../DNAC_USER_CONFIG_TPL.js ../DNAC_USER_CONFIG.js
 echo "IP address of Catalyst Center appliance is "$2
@@ -17,10 +17,9 @@ sed -i "s/IP_ADDRESS/$2/g" ../DNAC_USER_CONFIG.js
 echo "Username to use for login is "$3
 sed -i "s/USER_NAME/$3/g" ../DNAC_USER_CONFIG.js
 sed -i "s/USER_PASSWORD/$4/g" ../DNAC_USER_CONFIG.js
-#docker-compose up -d
-#docker run \
-#    -p 9090:9090 \
-#    -v ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml \
-#    prom/prometheus
+docker-compose up -d
+
+echo "Starting Grafana Docker container"
+
 cd ..
 node ./server.js
