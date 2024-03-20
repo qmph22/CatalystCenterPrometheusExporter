@@ -1,7 +1,7 @@
 {
-  "name": "appdev2019",
-  "version": "1.0.0",
-  "description": "App Dev 2019 Sample",
+  "name": "Cisco Catalyst Center - Prometheus Exporter",
+  "version": "0.1.0",
+  "description": "An interface between Cisco Catalyst Center and Prometheus Exporter",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,8 +10,10 @@
     "cluster": "^0.7.7",
     "express": "^4.17.1",
     "prom-client": "^11.3.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "node": "8.11.2",
+    "request": "latest"
   },
-  "author": "Jerry David",
+  "author": "Quang Phan",
   "license": "ISC"
 }

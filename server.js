@@ -21,7 +21,7 @@ let dnac = new DNAC({
 
 // Test Code to enable for troubleshooting DNAC interface helper
 //dnac.getSites(function(sites) {
-//console.log(JSON.stringify(sites));	
+//console.log(JSON.stringify(sites));
 //});
 
 const Histogram = client.Histogram;
@@ -96,13 +96,15 @@ setInterval(() => {
 }, 100);
 
 server.get('/metrics', (req, res) => {
+	console.log(`The content type is ${register.contentType}`)
 	res.set('Content-Type', register.contentType);
-	res.end(register.metrics());
+	console.log(register.metrics());
+	res.send(register.metrics());
 });
 
 server.get('/metrics/counter', (req, res) => {
 	res.set('Content-Type', register.contentType);
-	res.end(register.getSingleMetricAsString('test_counter'));
+	res.send(register.getSingleMetricAsString('test_counter'));
 });
 
 //Enable collection of default metrics
