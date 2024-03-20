@@ -19,7 +19,5 @@ sed -i "s/USER_NAME/$3/g" ../DNAC_USER_CONFIG.js
 sed -i "s/USER_PASSWORD/$4/g" ../DNAC_USER_CONFIG.js
 docker-compose up -d
 
-echo "Starting Grafana Docker container"
-
 cd ..
 node ./server.js
