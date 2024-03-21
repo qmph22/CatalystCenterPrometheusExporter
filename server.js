@@ -40,16 +40,46 @@ const c = new Counter({
 
 const Gauge = client.Gauge;
 
-const nd = new client.Gauge({
+const ndcGauge = new client.Gauge({
 	name: 'dnac_network_device_count',
 	help: 'Network Device Count'
 });
 
 setInterval(() => {
-	dnac.getNetworkDevicesCount(function(networkDevices) {
-//		console.log(JSON.stringify(networkDevices));
-		console.log("Collected network device count: " + networkDevices.response);
-		nd.set(networkDevices.response);
+	dnac.getNetworkDevicesCount(function(networkDevicesCount) {
+//		console.log(JSON.stringify(networkDevicesCount));
+		console.log("Collected network device count: " + networkDevicesCount.response);
+		ndcGauge.set(networkDevicesCount.response);
+	});
+}, 3000);
+/*
+setInterval(() => {
+	dnac.getEOXData(function(eoxData) {
+		let eoxDataReponse = eoxData.response;
+		//console.log(JSON.stringify(eoxData.response));
+		console.log("Collected network device EoX Data: " + eoxDataReponse);
+	});
+}, 3000);
+*/
+setInterval(() => {
+	dnac.getVLANDetails(function(vlanDetails) {
+		let vlanDetailsReponse = vlanDetails.response;
+		//console.log(JSON.stringify(eoxData.response));
+		console.log("Collected VLAN details: " + vlanDetailsReponse);
+	});
+}, 3000);
+
+const complianceStatusCountGuage = new client.Gauge({
+	name: 'dnac_Compliance_Status_Count',
+	help: 'STATUS Compliant Devices Count'
+});
+
+setInterval(() => {
+	dnac.getComplianceStatusCount(function(complianceStatusCount) {
+		let complianceStatusCountReponse = complianceStatusCount.response;
+		//console.log(JSON.stringify(eoxData.response));
+		console.log("Compliance status count: " + complianceStatusCountReponse);
+		complianceStatusCountGuage.set(complianceStatusCountReponse);
 	});
 }, 3000);
 
@@ -65,6 +95,18 @@ setInterval(() => {
 	});
 }, 3000);
 
+setInterval(() => {
+	dnac.getNetworkDevices(function(networkDevices) {
+//		console.log(JSON.stringify(networkDevices));
+		let networkDevicesHostname = [];
+		let networkDevicesResponse = networkDevices.response; //Returns an array of lists with each list item representing a network device. Each element in the list represents a property of the network device.
+		networkDevicesResponse.forEach((returnedDevice) => {
+			networkDevicesHostname.push(returnedDevice.hostname);
+		});
+		console.log("Collected network devices: " + networkDevicesHostname);
+//		ndcGauge.set(networkDevices.response);
+	});
+}, 3000);
 
 const g = new Gauge({
 	name: 'test_gauge',

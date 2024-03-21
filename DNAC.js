@@ -13,6 +13,9 @@ var URL_NETWORK_DEVICES = '/api/v1/network-device';
 var URL_NETWORK_DEVICES_COUNT = '/api/v1/network-device/count';
 var URL_NETWORK_SUMMARY = '/api/assurance/v1/network-device/healthSummary?measureBy=global&windowInMin=5&startTime=1526594700000&endTime=1526681100000&limit=300&offset=1';
 var URL_SITES_COUNT = '/api/v1/group/count?groupType=SITE';
+const URL_EOX = '/api/v1/eox-status/device';
+const URL_VLAN_DETAILS = '/dna/intent/api/v1/topology/vlan/vlan-names';
+const URL_COMPLIANCE_STATUS_COUNT = '/dna/intent/api/v1/compliance/count';
 
 var request = require('request');
 
@@ -172,5 +175,25 @@ DNAC.prototype.getNetworkSummary = function(callback) {
     var params = {};
     return that._postRequest(URL_NETWORK_SUMMARY, params, callback);
 };
+
+DNAC.prototype.getEOXData = function(callback) {
+    var that = this;
+    var params = {};
+    return that._getRequest(URL_NETWORK_SUMMARY, params, callback);
+};
+
+DNAC.prototype.getVLANDetails = function(callback) {
+    var that = this;
+    var params = {};
+    return that._getRequest(URL_VLAN_DETAILS, params, callback);
+};
+
+DNAC.prototype.getComplianceStatusCount = function(callback) {
+    var that = this;
+    var params = { 'ComplianceStatus' : 'NOT_APPLICABLE' };
+    return that._getRequest(URL_COMPLIANCE_STATUS_COUNT, params, callback);
+    //Compliance status can have value among 'COMPLIANT', 'NON_COMPLIANT', 'IN_PROGRESS', 'NOT_AVAILABLE', 'NOT_APPLICABLE', 'ERROR'
+};
+
 
 module.exports = DNAC;
