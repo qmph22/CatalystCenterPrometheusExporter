@@ -25,18 +25,10 @@ let dnac = new DNAC({
 //});
 
 const Histogram = client.Histogram;
-const h = new Histogram({
-	name: 'test_histogram',
-	help: 'Example of a histogram',
-	labelNames: ['code']
-});
+
 
 const Counter = client.Counter;
-const c = new Counter({
-	name: 'test_counter',
-	help: 'Example of a counter',
-	labelNames: ['code']
-});
+
 
 const Gauge = client.Gauge;
 
@@ -44,6 +36,9 @@ const ndcGauge = new client.Gauge({
 	name: 'dnac_network_device_count',
 	help: 'Network Device Count'
 });
+
+const reachabilityStatus = new Map([['Unreachable', 0], ['Reachable', 1]]);
+let networkDevicesMap = new Map();
 
 setInterval(() => {
 	dnac.getNetworkDevicesCount(function(networkDevicesCount) {
@@ -95,6 +90,11 @@ setInterval(() => {
 	});
 }, 3000);
 
+const networkDeviceGauge = new Gauge({
+	name: 'dnac_reachabilityStatus_gauge',
+	help: 'reachabilityStatus of network device',
+	labelNames: ['hostname']
+});
 setInterval(() => {
 	dnac.getNetworkDevices(function(networkDevices) {
 //		console.log(JSON.stringify(networkDevices));
@@ -102,22 +102,37 @@ setInterval(() => {
 		let networkDevicesResponse = networkDevices.response; //Returns an array of lists with each list item representing a network device. Each element in the list represents a property of the network device.
 		networkDevicesResponse.forEach((returnedDevice) => {
 			networkDevicesHostname.push(returnedDevice.hostname);
+			if (!networkDevicesMap.has(returnedDevice)) {
+				networkDevicesMap.set(returnedDevice.hostname, returnedDevice); }
 		});
-		console.log("Collected network devices: " + networkDevicesHostname);
-//		ndcGauge.set(networkDevices.response);
+		console.log(`Collected network devices: ${networkDevicesHostname} in array`);
+
+		networkDevicesMap.forEach((value, key, map) => {
+				if (reachabilityStatus.get(value.reachabilityStatus) != undefined) {
+					networkDeviceGauge.labels(key).set(reachabilityStatus.get(value.reachabilityStatus));
+					console.log(`Reachability status of device key : ${reachabilityStatus.get(value.reachabilityStatus)}`);
+				}
+
+		});
 	});
 }, 3000);
 
-const g = new Gauge({
-	name: 'test_gauge',
-	help: 'Example of a gauge',
-	labelNames: ['method', 'code']
+const h = new Histogram({
+	name: 'test_histogram',
+	help: 'Example of a histogram',
+	labelNames: ['code']
 });
 
 setTimeout(() => {
 	h.labels('200').observe(Math.random());
 	h.labels('300').observe(Math.random());
 }, 10);
+
+const c = new Counter({
+	name: 'test_counter',
+	help: 'Example of a counter',
+	labelNames: ['code']
+});
 
 setInterval(() => {
 	c.inc({ code: 200 });
@@ -130,6 +145,12 @@ setInterval(() => {
 setInterval(() => {
 	c.inc();
 }, 2000);
+
+const g = new Gauge({
+	name: 'test_gauge',
+	help: 'Example of a gauge',
+	labelNames: ['method', 'code']
+});
 
 setInterval(() => {
 	g.set({ method: 'get', code: 200 }, Math.random());
